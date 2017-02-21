@@ -52,7 +52,10 @@ class HTTP(threading.Thread):
 
     def _sanitize_url(self, page, url):
         if '//' in url:
-            return url
+            if url.startswith('//'):
+                return 'http:' + url
+            else:
+                return url
         else:
             return urljoin(page, url)
 
@@ -70,10 +73,8 @@ class HTTP(threading.Thread):
         # And download all resources of the page
         for resource in resources:
             print('downloading resource - {}'.format(resource))
-            try:
-                _ = requests.get(self._sanitize_url(page, resource)).text
-            except:
-                _ = requests.get('http:' + self._sanitize_url(page, resource)).text
+            _ = requests.get(self._sanitize_url(page, resource)).text
+
 
     def run(self):
         print("starting on page {}".format(self.start_page))
