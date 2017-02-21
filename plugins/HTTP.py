@@ -67,6 +67,8 @@ class HTTP(threading.Thread):
         links, resources = p.close()
         # Fill links to queue
         for link in links:
+            if link == '#':
+                continue
             print('saving link to queue - {}'.format(link))
             self.q.put(self._sanitize_url(page, link))
 
