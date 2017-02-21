@@ -21,9 +21,19 @@ for plugin in plugins_list:
     module = importlib.import_module('plugins.' + plugin)
     # Get main class
     worker_class = module.__dict__[plugin]
-    # Initialize class (create worker object)
-    worker = worker_class(config[plugin])
-    # Add worker to the pool of workers
-    workers.append(worker)
+    # How many workers we need from this plugin?
+    num = int(config[plugin].get('workers', 1))
+    # Create as many intances as defined in config file
+    for x in range(num):
+        # Initialize class (create worker object)
+        worker = worker_class(config[plugin])
+        # Add worker to the pool of workers
+        workers.append(worker)
 
-print(workers)
+# Start all workers
+for worker in workers:
+    worker.start()
+
+# Wait for the end of all workers
+for worker in workers:
+    worker.join()
