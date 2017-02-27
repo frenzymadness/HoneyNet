@@ -73,7 +73,7 @@ class HTTP(threading.Thread):
         links, resources = p.close()
         # Fill links to queue
         for link in links:
-            if link == '#':
+            if link == '#' or link.startswith('mailto:'):
                 continue
             logger.debug('saving link to queue - {}'.format(link))
             self.q.put(self._sanitize_url(page, link))
