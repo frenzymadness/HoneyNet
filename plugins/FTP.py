@@ -45,7 +45,7 @@ class FTP(threading.Thread):
 
                 if action == 'read' and files_list:
                     file = choice(files_list)
-                    logger.debug('Performing "read" action with {} file'.format(file))
+                    logger.info('Performing "read" action with {} file'.format(file))
                     try:
                         ftp.retrbinary("RETR " + file, print_to_null)
                     except ftplib.error_perm:
@@ -54,7 +54,7 @@ class FTP(threading.Thread):
                     with NamedTemporaryFile() as file:
                         # Generate random file size
                         file_size = randint(*self.file_size_range)
-                        logger.debug('Performing "write" action with {} file {} MB size'.format(file.name, file_size))
+                        logger.info('Performing "write" action with {} file {} MB size'.format(file.name, file_size))
                         # Write file full of random data
                         file.write(os.urandom(1024 * 1024 * file_size))
                         file.seek(0)

@@ -84,14 +84,14 @@ class HTTP(threading.Thread):
             _ = requests.get(self._sanitize_url(page, resource)).text
 
     def run(self):
-        logger.info("starting on page {}".format(self.start_page))
+        logger.info("Dtarting on page {}".format(self.start_page))
         while True:
             if self.q.empty():
                 page = self.start_page
             else:
                 page = self.q.get()
 
-            logger.info('downloading data from {}'.format(page))
+            logger.info('Downloading data from {}'.format(page))
             self._download_page(page)
 
             delay = randint(*self.delay_range)
