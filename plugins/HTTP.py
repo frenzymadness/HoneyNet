@@ -5,6 +5,9 @@ import requests
 from urllib.parse import urljoin
 from html.parser import HTMLParser
 from time import sleep
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MyHTMLParser(HTMLParser):
@@ -69,24 +72,23 @@ class HTTP(threading.Thread):
         for link in links:
             if link == '#':
                 continue
-            print('saving link to queue - {}'.format(link))
+            logger.debug('saving link to queue - {}'.format(link))
             self.q.put(self._sanitize_url(page, link))
 
         # And download all resources of the page
         for resource in resources:
-            print('downloading resource - {}'.format(resource))
+            logger.debug('downloading resource - {}'.format(resource))
             _ = requests.get(self._sanitize_url(page, resource)).text
 
-
     def run(self):
-        print("starting on page {}".format(self.start_page))
+        logger.info("starting on page {}".format(self.start_page))
         while True:
             if self.q.empty():
                 page = self.start_page
             else:
                 page = self.q.get()
 
-            print('downloading data from {}'.format(page))
+            logger.info('downloading data from {}'.format(page))
             self._download_page(page)
 
             sleep(int(self.c['delay']))
