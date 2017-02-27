@@ -1,5 +1,5 @@
 import threading
-from random import choice
+from random import choice, randint
 import queue
 import requests
 from urllib.parse import urljoin
@@ -53,6 +53,9 @@ class HTTP(threading.Thread):
         self.q = SetQueue()
         self.start_page = choice(config['start-pages'].split())
 
+        up, down = self.c['delay_range'].split('-')
+        self.delay_range = (int(up), int(down))
+
     def _sanitize_url(self, page, url):
         if '//' in url:
             if url.startswith('//'):
@@ -91,4 +94,6 @@ class HTTP(threading.Thread):
             logger.info('downloading data from {}'.format(page))
             self._download_page(page)
 
-            sleep(int(self.c['delay']))
+            delay = randint(*self.delay_range)
+            logger.debug('Waiting for {} seconds'.format(delay))
+            sleep(delay)
