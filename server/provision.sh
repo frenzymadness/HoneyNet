@@ -14,7 +14,8 @@ dnf --assumeyes install vsftpd
 
 # enable anonymous upload
 sed -i 's/#anon_upload_enable=YES/anon_upload_enable=YES/g' /etc/vsftpd/vsftpd.conf
-
+# Fix permissions on uploaded files
+echo -e "chown_uploads=YES\nchown_upload_mode=0644\nchown_username=ftp" >> /etc/vsftpd/vsftpd.conf
 # chmod on public directory
 chmod 777 /var/ftp/pub
 
